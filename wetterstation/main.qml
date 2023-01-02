@@ -8,70 +8,84 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: qsTr("Hello World")
-
-//    StackView {
-//           id: stackView
-//           width: main_window.width
-//           height: main_window.height
-//           anchors.fill: parent
-//           property int param1: main_window.width
-//           property int param2: main_window.height
-//           initialItem:  Wetter { param1: stackView.param1
-//               param2: stackView.param2}
-
-//       }
+    title: qsTr("Bretschstation")
+    //text: qsTr("Wetter")
 
     // Drawer
     Drawer {
-            id: drawer
-            width: 0.66 * main_window.width
-            height: main_window.height
-            interactive: false
-            edge: Qt.RightEdge
+        id: drawer
+        width: 0.66 * main_window.width
+        height: main_window.height
+        interactive: false
+        edge: Qt.RightEdge
 
-            Label {
-                    id: content
+        Label {
+            id: content
 
-                    text: qsTr("Optionen")
-                    font.pixelSize: 20
-                    anchors.fill: parent
-                    verticalAlignment: parent.AlignVCenter
-                    horizontalAlignment: parent.AlignHCenter
-                    padding: 10
+            text: qsTr("Optionen")
+            font.pixelSize: 20
+            anchors.fill: parent
+            verticalAlignment: parent.AlignVCenter
+            horizontalAlignment: parent.AlignHCenter
+            padding: 10
 
 
-                    transform: Translate {
-                        x: drawer.position * content.width * 0.33
-                    }
-}
-                Button {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.left: parent.left
-                    icon.source: "qrc:/images/zurueck.png"
-                    icon.width: 32.0
-                    icon.height: 32.0
-                    onClicked: drawer.close()
-                }
-
+            transform: Translate {
+                x: drawer.position * content.width * 0.33
+            }
         }
+
+        Rectangle{
+            color: "white"
+            width: drawer.width * 0.50
+            height: drawer.height * 0.50
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            TextField {
+                id: _city
+                hoverEnabled: true
+                placeholderText: qsTr("Stadt eingeben")
+            }
+
+            ListView {
+                height: contentHeight
+                anchors.top: _city.bottom
+                model: ["Datum", "Uhrzeit", "Standort", "Regenwahrscheinlichkeit", "Windgeschwindigkeit", "Luftfeuchte", "24-Stunden Vorschau"]
+                delegate: SwitchDelegate {
+                    text: modelData
+                    checked: true
+                }
+            }
+        }
+
+        Button {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            icon.source: "qrc:/images/zurueck.png"
+            icon.width: 32.0
+            icon.height: 32.0
+            onClicked: drawer.close()
+        }
+
+    }
 
     // First Page
 
     Pane {
-            id: loc_info
-            anchors.right: parent.right
-            RowLayout {
-                id: info
-                Text{
-                    text: "Darmstadt" }
-                ToolSeparator {
+        id: loc_info
+        anchors.right: parent.right
+        RowLayout {
+            id: info
+            Text{
+                text: "Darmstadt" }
+            ToolSeparator {
 
-                }
-                Text{
-                    text: "02.01.2023" }
             }
+            Text{
+                text: "02.01.2023" }
         }
+    }
 
 
     Rectangle {
