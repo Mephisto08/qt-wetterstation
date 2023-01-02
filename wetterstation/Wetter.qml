@@ -33,87 +33,86 @@ Page {
             width: outer_column.width
             Layout.alignment: Qt.AlignTop | Qt.AlignRight
             RowLayout {
-            id: info
-            Text{
-                text: "Darmstadt" }
-            ToolSeparator {
+                id: info
+                Text{
+                    text: "Darmstadt" }
+                ToolSeparator {
 
-            }
-            Text{
-                text: "02.01.2023" }
+                }
+                Text{
+                    text: "02.01.2023" }
             }
         }
 
-            RowLayout{
-                id: raws
-                width: outer_column.width
-                Layout.alignment: Qt.AlignTop
-                spacing: 10
-                Layout.fillWidth: true
+        RowLayout{
+            id: raws
+            width: outer_column.width
+            Layout.alignment: Qt.AlignTop
+            spacing: 10
+            Layout.fillWidth: true
 
-                Rectangle {
-                    id: rect
-                    width: raws.width*0.90;
-                    height: 200
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
-                    Component {
-                        id: wetterDelegate
-                        Item {
-                            width: 180; height: 40
-                            Column {
-                                Text { text: '<b>Name:</b> ' + name }
-                                Text { text: '<b>Number:</b> ' + number }
-                            }
+            Rectangle {
+                id: rect
+                width: raws.width*0.90;
+                height: 200
+                Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
+                Component {
+                    id: wetterDelegate
+                    Item {
+                        width: 180; height: 40
+                        Column {
+                            Text { text: '<b>Name:</b> ' + name }
+                            Text { text: '<b>Number:</b> ' + number }
                         }
                     }
-
-                    ListView {
-                        anchors.fill: parent
-                        model: WetterModel {}
-                        delegate: wetterDelegate
-                        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
-                        focus: true
-                    }
                 }
 
-                Button {
-                    id: options_button
-                    Layout.alignment: Qt.AlignRight | Qt.AlignHCenter
-                    Layout.leftMargin: root.width*0.02
-                    icon.source: "qrc:/images/optionen.png"
-                    icon.width: 32.0
-                    icon.height: 32.0
-                    onClicked: root.StackView.view.push("Optionen.qml")
-                }
-
-
-        }
-
-            ScrollView {
-                Layout.alignment: Qt.AlignCenter | Qt.AlignBottom
-                ScrollBar.horizontal.interactive: true
-                //anchors.fill: parent
-                id: scrollBar
-//                property bool showScrollBar: position < maximum - pageSize
-//                visible: showScrollBar
-                contentWidth: root.width
-                contentHeight: 50
-
-                Rectangle {
-                    width: root.width; height: 40
-                    Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
-
-
-                    ListView {
-                        anchors.fill: parent
-                        model: WetterModel {}
-                        delegate: wetterDelegate
-
-                        orientation: Qt.Horizontal
-                        focus: true
-
-                    }
+                ListView {
+                    anchors.fill: parent
+                    model: WetterModel {}
+                    delegate: wetterDelegate
+                    highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+                    focus: true
                 }
             }
+        }
+    }
+    Button {
+        id: options_button
+        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+        anchors.right: outer_column.right
+        // Layout.leftMargin: root.width*0.02
+        icon.source: "qrc:/images/optionen.png"
+        icon.width: 32.0
+        icon.height: 32.0
+        onClicked: root.StackView.view.push("Optionen.qml")
+    }
+
+    ScrollView {
+        Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
+        anchors.bottom: parent.bottom
+        ScrollBar.horizontal.interactive: true
+        //anchors.fill: parent
+        id: scrollBar
+        //                property bool showScrollBar: position < maximum - pageSize
+        //                visible: showScrollBar
+        contentWidth: root.width*0.90
+        contentHeight: 50
+
+        Rectangle {
+            width: root.width; height: 40
+            Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
+
+
+            ListView {
+                anchors.fill: parent
+                model: WetterModel {}
+                delegate: wetterDelegate
+
+                orientation: Qt.Horizontal
+                focus: true
+
+            }
+        }
     }
 }
