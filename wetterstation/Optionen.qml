@@ -16,6 +16,8 @@ Page {
     }
 
         Button {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
             icon.source: "qrc:/images/zurueck.png"
             icon.width: 32.0
             icon.height: 32.0
