@@ -1,12 +1,16 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
-import QtQuick.Controls 2.5
+import QtQuick.Controls 2.15
 import QtQuick.Layouts
 
 
 
 Page {
     id: root
+    property int param1
+    property int param2
+    width: param1
+    height: param2
     anchors.fill: parent
     header: Label {
         padding: 10
@@ -20,10 +24,13 @@ Page {
 
 
     ColumnLayout{
+        id: outer_column
         Layout.alignment: Qt.AlignCenter
         spacing: 20
+        width: root.width
         Pane {
             id: loc_info
+            width: outer_column.width
             Layout.alignment: Qt.AlignTop | Qt.AlignRight
             RowLayout {
             id: info
@@ -37,15 +44,17 @@ Page {
             }
         }
 
-
-
             RowLayout{
+                id: raws
+                width: outer_column.width
                 Layout.alignment: Qt.AlignTop
-                spacing: 20
+                spacing: 10
                 Layout.fillWidth: true
 
                 Rectangle {
-                    width: 540; height: 200
+                    id: rect
+                    width: raws.width*0.90;
+                    height: 200
                     Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
                     Component {
                         id: wetterDelegate
@@ -70,7 +79,7 @@ Page {
                 Button {
                     id: options_button
                     Layout.alignment: Qt.AlignRight | Qt.AlignHCenter
-                    Layout.leftMargin: 40
+                    Layout.leftMargin: root.width*0.02
                     icon.source: "qrc:/images/optionen.png"
                     icon.width: 32.0
                     icon.height: 32.0
@@ -80,5 +89,31 @@ Page {
 
         }
 
+            ScrollView {
+                Layout.alignment: Qt.AlignCenter | Qt.AlignBottom
+                ScrollBar.horizontal.interactive: true
+                //anchors.fill: parent
+                id: scrollBar
+//                property bool showScrollBar: position < maximum - pageSize
+//                visible: showScrollBar
+                contentWidth: root.width
+                contentHeight: 50
+
+                Rectangle {
+                    width: root.width; height: 40
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
+
+
+                    ListView {
+                        anchors.fill: parent
+                        model: WetterModel {}
+                        delegate: wetterDelegate
+
+                        orientation: Qt.Horizontal
+                        focus: true
+
+                    }
+                }
+            }
     }
 }
