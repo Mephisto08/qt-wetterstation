@@ -25,19 +25,21 @@ ApplicationWindow {
     // Drawer
     Drawer {
             id: drawer
-            width: 0.66 * window.width
-            height: window.height
+            width: 0.66 * main_window.width
+            height: main_window.height
             interactive: false
             edge: Qt.RightEdge
 
             Label {
                     id: content
 
-                    text: "Aa"
-                    font.pixelSize: 96
+                    text: qsTr("Optionen")
+                    font.pixelSize: 20
                     anchors.fill: parent
-                    verticalAlignment: Label.AlignVCenter
-                    horizontalAlignment: Label.AlignHCenter
+                    verticalAlignment: parent.AlignVCenter
+                    horizontalAlignment: parent.AlignHCenter
+                    padding: 10
+
 
                     transform: Translate {
                         x: drawer.position * content.width * 0.33
@@ -45,7 +47,7 @@ ApplicationWindow {
 }
                 Button {
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.right: parent.right
+                    anchors.left: parent.left
                     icon.source: "qrc:/images/zurueck.png"
                     icon.width: 32.0
                     icon.height: 32.0
