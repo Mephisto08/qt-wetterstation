@@ -80,7 +80,8 @@ Page {
     Button {
         id: options_button
         Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        anchors.right: outer_column.right
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
         // Layout.leftMargin: root.width*0.02
         icon.source: "qrc:/images/optionen.png"
         icon.width: 32.0
