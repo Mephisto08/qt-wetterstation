@@ -21,33 +21,21 @@ Page {
             anchors {
                 horizontalCenter: parent.horizontalCenter
             }
-            topPadding: 10
-            bottomPadding: 20
-            font.pixelSize: 30
+            padding: {
+                top: 10
+            }
+            font.pixelSize: 25
         }
 
         TextField {
             id: inputCity
             anchors {
                 top: optionenTitle.bottom
-                horizontalCenter: parent.horizontalCenter
+                left: optionenContent.left
             }
-            width: parent.width * 0.85
-            placeholderText: qsTr("Standort")
-            font.pixelSize: 15
-            leftPadding: 10
-            rightPadding: 10
-            topPadding: 5
-            bottomPadding: 5
-        }
-
-        ButtonGroup {
-           id: checkGroup
-           exclusive: false
-
-           Component.onCompleted: {
-               console.log("log completed")
-           }
+            Layout.topMargin: 20
+            hoverEnabled: true
+            placeholderText: qsTr("Stadt eingeben")
         }
 
         ListView {
@@ -57,22 +45,16 @@ Page {
                 left: optionenContent.left
                 right: optionenContent.right
                 bottom: optionenContent.bottom
-                topMargin: 10
             }
             model: ["Datum", "Uhrzeit", "Standort", "Regenwahrscheinlichkeit", "Windgeschwindigkeit", "Luftfeuchte", "24-Stunden Vorschau"]
             delegate: SwitchDelegate {
-                id: checkBoxes
+                padding: {
+                    top: 10
+                    bottom: 30
+                }
+                width: parent.width
                 text: modelData
                 checked: true
-                ButtonGroup.group: checkGroup
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                }
-                font.pixelSize: 15
-                padding: 10
-                leftPadding: 20
-                rightPadding: 20
             }
         }
     }
