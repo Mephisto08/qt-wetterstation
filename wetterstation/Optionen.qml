@@ -56,24 +56,11 @@ Page {
             }
             topPadding: 10
             bottomPadding: 20
-            font.pixelSize: 30
-        }
-
-        TextField {
-            id: inputCity
-            text: inputState
-            anchors {
-                top: optionenTitle.bottom
-                horizontalCenter: parent.horizontalCenter
+            font {
+                pixelSize: 30
+                family: "Verdana"
+                weight: Font.DemiBold
             }
-            width: parent.width * 0.85
-            placeholderText: qsTr("Standort")
-            font.pixelSize: 15
-            leftPadding: 10
-            rightPadding: 10
-            topPadding: 5
-            bottomPadding: 5
-            onTextChanged: inputState = text
         }
 
         ListModel{
@@ -90,13 +77,12 @@ Page {
             id: checkList
             model: checkModel
             anchors {
+                topMargin: 10
                 top: inputCity.bottom
                 left: optionenContent.left
                 right: optionenContent.right
                 bottom: optionenContent.bottom
-                topMargin: 10
             }
-
             delegate: SwitchDelegate {
                 id: modelCheckBoxes
                 checked: model.checked
@@ -114,6 +100,23 @@ Page {
                     model.checked = checked
                 }
             }
+        }
+
+        TextField {
+            id: inputCity
+            text: inputState
+            anchors {
+                top: optionenTitle.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+            width: parent.width * 0.85
+            placeholderText: qsTr("Standort")
+            font.pixelSize: 15
+            leftPadding: 10
+            rightPadding: 10
+            topPadding: 5
+            bottomPadding: 5
+            onTextChanged: inputState = text
         }
 
         Button {

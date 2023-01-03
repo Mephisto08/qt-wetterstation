@@ -2,9 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>Wetter.qml</file>
-        <file>images/left.png</file>
-        <file>images/right.png</file>
         <file>Optionen.qml</file>
         <file>WetterModel.qml</file>
+        <file>images/background.jpeg</file>
     </qresource>
 </RCC>

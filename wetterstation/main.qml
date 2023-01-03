@@ -20,16 +20,14 @@ ApplicationWindow {
         interactive: true
         edge: Qt.RightEdge
         height: mainWindow.height
-        width: mainWindow.width * 0.45
+        width: 275
 
         Optionen {}
         Button {
             id: drawerClose
-            icon {
-                source: "qrc:/images/right.png"
-                width: 32.0
-                height: 32.0
-            }
+            font.pixelSize: 30
+            width: 22
+            text: '❯'
             anchors {
                 right: parent.right
                 rightMargin: drawer.width
@@ -44,11 +42,9 @@ ApplicationWindow {
     Wetter {}
     Button {
         id: drawerOpen
-        icon {
-            source: "qrc:/images/left.png"
-            width: 32.0
-            height: 32.0
-        }
+        font.pixelSize: 30
+        width: 22
+        text: '❮'
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter

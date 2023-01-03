@@ -7,31 +7,91 @@ Page {
     id: wetter
     anchors.fill: parent
 
-    Pane {
-        id: loc_info
-        anchors.right: parent.right
-        RowLayout {
-            id: info
-            Text{
-                text: "Darmstadt" }
-            ToolSeparator {
+    background: Image {
+        source: "qrc:/images/background.jpeg"
+    }
 
-            }
-            Text{
-                text: "02.01.2023" }
+    Label {
+        id: wetterTitle
+        text: qsTr("Darmstadt")
+        anchors {
+            bottom: seperator.top
+            horizontalCenter: parent.horizontalCenter
+        }
+        font {
+            pixelSize: 30
+            family: "Verdana"
+            weight: Font.ExtraBold
+            capitalization: Font.AllUppercase
         }
     }
 
+    Label {
+        id: wetterDate
+        text: qsTr("2. Nov 2022")
+        anchors {
+            bottom: seperator.top
+            left: parent.left
+            leftMargin: 10
+            bottomMargin: 5
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+
+    Label {
+        id: wetterTime
+        text: qsTr("18:00 Uhr")
+        anchors {
+            bottom: seperator.top
+            right: parent.right
+            rightMargin: 10
+            bottomMargin: 5
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+
+    Rectangle {
+        id: seperator
+        color: "black"
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            topMargin: 50
+            leftMargin: 5
+            rightMargin: 5
+        }
+        height: 3
+    }
 
     Rectangle {
         id: rect
-        anchors.verticalCenter: parent.verticalCenter
-        width: main_window.width*0.90;
-        height: main_window.height*0.50;
+        color: "transparent"
+        anchors {
+            verticalCenter: parent.verticalCenter
+            top: seperator.bottom
+            bottom: scrollBar.top
+            left: parent.left
+            right: parent.right
+            topMargin: 5
+            bottomMargin: 5
+            leftMargin: 5
+            rightMargin: 5
+        }
+
         Component {
             id: wetterDelegate
             Item {
-                width: 180; height: 40
+                width: 180
+                height: 40
                 Column {
                     Text { text: '<b>Name:</b> ' + name }
                     Text { text: '<b>Number:</b> ' + number }
@@ -43,32 +103,39 @@ Page {
             anchors.fill: rect
             model: WetterModel {}
             delegate: wetterDelegate
-            highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
             focus: true
         }
     }
 
-
-
     ScrollView {
-        anchors.bottom: parent.bottom
-        ScrollBar.horizontal.interactive: true
         id: scrollBar
-        contentWidth: main_window.width*0.90
+        ScrollBar.horizontal.interactive: true
+        background: null
         contentHeight: 50
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            leftMargin: 5
+            rightMargin: 5
+        }
 
         Rectangle {
-            width: scrollBar.width
-            height: 40
+            color: "transparent"
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+                top: parent.top
+            }
+
 
             ListView {
                 anchors.fill: parent
                 model: WetterModel {}
                 delegate: wetterDelegate
-
                 orientation: Qt.Horizontal
                 focus: true
-
             }
         }
     }
