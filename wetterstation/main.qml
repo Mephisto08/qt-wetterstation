@@ -42,6 +42,7 @@ ApplicationWindow {
     Wetter {}
     Button {
         id: drawerOpen
+        objectName: "drawerOpen"
         font.pixelSize: 30
         width: 22
         text: '❮'
@@ -51,6 +52,8 @@ ApplicationWindow {
         }
         Material.background: blue
         Material.foreground: white
-        onClicked: drawer.open()
+        onClicked: {
+                    drawer.open()
+                }
     }
 }

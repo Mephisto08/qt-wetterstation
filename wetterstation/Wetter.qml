@@ -13,6 +13,7 @@ Page {
 
     Label {
         id: wetterTitle
+        objectName: "wetterTitle"
         text: qsTr("Darmstadt")
         anchors {
             bottom: seperator.top
@@ -28,6 +29,7 @@ Page {
 
     Label {
         id: wetterDate
+        objectName: "wetterDate"
         text: qsTr("2. Nov 2022")
         anchors {
             bottom: seperator.top
@@ -44,6 +46,7 @@ Page {
 
     Label {
         id: wetterTime
+        objectName: "wetterTime"
         text: qsTr("18:00 Uhr")
         anchors {
             bottom: seperator.top
