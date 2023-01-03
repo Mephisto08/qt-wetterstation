@@ -8,6 +8,39 @@ Page {
         fill: parent
     }
 
+    property string inputState: "Darmstadt"
+    property var optionStates: [
+        {
+            name: "Datum",
+            checked: true
+        },
+        {
+            name: "Uhrzeit",
+            checked: true
+        },
+        {
+            name: "Standort",
+            checked: true
+        },
+        {
+            name: "Regenwahrscheinlichkeit",
+            checked: true
+        },
+        {
+            name: "Windgeschwindigkeit",
+            checked: true
+        },
+        {
+            name: "Luftfeuchte",
+            checked: true
+        },
+        {
+            name: "24-Stunden Vorschau",
+            checked: true
+        }
+    ]
+
+
     Rectangle {
         id: optionenContent
         color: 'white'
@@ -28,6 +61,7 @@ Page {
 
         TextField {
             id: inputCity
+            text: inputState
             anchors {
                 top: optionenTitle.bottom
                 horizontalCenter: parent.horizontalCenter
@@ -39,19 +73,22 @@ Page {
             rightPadding: 10
             topPadding: 5
             bottomPadding: 5
+            onTextChanged: inputState = text
         }
 
-        ButtonGroup {
-           id: checkGroup
-           exclusive: false
-
-           Component.onCompleted: {
-               console.log("log completed")
-           }
+        ListModel{
+            id: checkModel
+            dynamicRoles: true
+            Component.onCompleted: {
+                for(const option of optionStates) {
+                    checkModel.append({"name": option.name, "checked": option.checked})
+                }
+            }
         }
 
         ListView {
             id: checkList
+            model: checkModel
             anchors {
                 top: inputCity.bottom
                 left: optionenContent.left
@@ -59,12 +96,11 @@ Page {
                 bottom: optionenContent.bottom
                 topMargin: 10
             }
-            model: ["Datum", "Uhrzeit", "Standort", "Regenwahrscheinlichkeit", "Windgeschwindigkeit", "Luftfeuchte", "24-Stunden Vorschau"]
+
             delegate: SwitchDelegate {
-                id: checkBoxes
-                text: modelData
-                checked: true
-                ButtonGroup.group: checkGroup
+                id: modelCheckBoxes
+                checked: model.checked
+                text: model.name
                 anchors {
                     left: parent.left
                     right: parent.right
@@ -73,6 +109,26 @@ Page {
                 padding: 10
                 leftPadding: 20
                 rightPadding: 20
+                onClicked: {
+                    optionenTitle.visible = !optionenTitle.visible
+                    model.checked = checked
+                }
+            }
+        }
+
+        Button {
+            id: test
+            text: "Read all"
+            anchors {
+                right: parent.right
+                bottom: parent.bottom
+            }
+            onClicked: {
+                console.log()
+                console.log("Standort => " + inputState)
+                for(const index in optionStates) {
+                    console.log(checkModel.get(index).name + " => " + checkModel.get(index).checked)
+                }
             }
         }
     }
