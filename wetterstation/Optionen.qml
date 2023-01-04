@@ -8,7 +8,7 @@ Page {
         fill: parent
     }
 
-    property string inputState: "Darmstadt"
+    property string inputState: caller.getCity()
     property var optionStates: [
         {
             name: "Datum",
@@ -20,6 +20,10 @@ Page {
         },
         {
             name: "Standort",
+            checked: true
+        },
+        {
+            name: "Temperatur",
             checked: true
         },
         {

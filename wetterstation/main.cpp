@@ -1,10 +1,8 @@
 #include "qnetworkreply.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-
 #include <QLocale>
 #include <QTranslator>
-
 #include <iostream>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -17,17 +15,15 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QQmlComponent>
-
 #include <QTimer>
 #include <QDebug>
 #include <QString>
 #include <QQmlContext>
-
 #include "caller.h"
 using namespace std;
 
 
-void getWeather(QObject* mainPage, QString location) {
+void getWeather(QObject* mainPage, Caller* caller, QString location) {
     QTimer timer;
     QNetworkAccessManager* manager = new QNetworkAccessManager();
     QString geoUrl = "https://geocoding-api.open-meteo.com/v1/search?count=1&name="+location;
@@ -43,7 +39,7 @@ void getWeather(QObject* mainPage, QString location) {
 
     QNetworkReply* rep = manager->get(geoRequest);
 
-    QObject::connect(manager, &QNetworkAccessManager::finished, [mainPage](QNetworkReply* reply) {
+    QObject::connect(manager, &QNetworkAccessManager::finished, [mainPage, caller](QNetworkReply* reply) {
         QByteArray data = reply->readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
         QJsonObject sett2 = doc.object();
@@ -70,22 +66,24 @@ void getWeather(QObject* mainPage, QString location) {
         QObject::connect(&timer, &QTimer::timeout, nullptr, [&rep]() { rep->abort(); });
 
 
-        QObject::connect(manager, &QNetworkAccessManager::finished, [mainPage](QNetworkReply* reply) {
+        QObject::connect(manager, &QNetworkAccessManager::finished, [mainPage, caller](QNetworkReply* reply) {
             QByteArray data = reply->readAll();
             QJsonDocument doc = QJsonDocument::fromJson(data);
             QJsonObject sett2 = doc.object();
             QJsonValue rawResult = sett2.value(QString("current_weather"));
             QJsonObject weather = rawResult.toObject();
 
-            QString time = QString(weather["time"].toString());
             QString temperature = QString::number(weather["temperature"].toDouble());
             QString winddirection = QString::number(weather["winddirection"].toDouble());
             QString windspeed = QString::number(weather["windspeed"].toDouble());
             //cout << endl << "WEATHER" << endl;
             //cout << "Time -> " << time.toStdString() << endl;
             //cout << "Temperature -> " << temperature.toStdString() << endl;
-            QObject* testItem = mainPage->findChild<QObject *>("wetterTitle");
-            testItem->setProperty("text", temperature);
+
+            caller->setTemperature(temperature);
+            caller->setWinddirection(winddirection);
+            caller->setWindspeed(windspeed);
+
             //cout << "Winddirection -> " << winddirection.toStdString() << endl;
             //cout << "Windspeed -> " << windspeed.toStdString() << endl;
         });
@@ -115,8 +113,10 @@ int main(int argc, char *argv[])
         }
     }
 
+    Caller* caller = new Caller();
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("caller", new Caller());
+    engine.rootContext()->setContextProperty("caller", caller);
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     //QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
     //                 &app, [url](QObject *obj, const QUrl &objUrl) {
@@ -126,6 +126,9 @@ int main(int argc, char *argv[])
     //engine.load(url);
     QQmlComponent component(&engine, url);
     QObject *mainPage = component.create();
+
+    // Initial api call for starting values
+    getWeather(mainPage, caller, caller->getCity());
 
     QTimer timer;
     // for schleife die alle 10 sekunden ausgeführt wird
@@ -158,18 +161,18 @@ int main(int argc, char *argv[])
         seconds << std::put_time(&tm, "%S");
         std::string secondsStr = seconds.str();
         if (secondsStr == "00"){
-            getWeather(mainPage, "Darmstadt");
-        }else if(secondsStr == "30"){
-            QObject* testItem = mainPage->findChild<QObject *>("wetterTitle");
-            testItem->setProperty("text", "temperature");
+            getWeather(mainPage, caller, caller->getCity());
         }
-        //item->setProperty("text", "Hello Ramon!");
+        /*else if(secondsStr == "30"){
+            QObject* testItem = mainPage->findChild<QObject *>("wetterTitle");
+            // testItem->setProperty("text", "temperature");
+        }
+        //item->setProperty("text", "Hello Ramon!");*/
 
 
     });
     timer.start(1000); // 10 Sekunden
 
-    cout << "Test" << endl;
     return app.exec();
 }
 

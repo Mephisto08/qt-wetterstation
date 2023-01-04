@@ -15,21 +15,25 @@ ApplicationWindow {
     property string white: "#FFFFFF"
     property string blue: "#0A83E0"
 
-    Connections {
-            target: caller
-            onUeConnectedChanged: {
-                console.log("Connected changed!")
-            }
-        }
-
     Drawer {
         id: drawer
         interactive: true
         edge: Qt.RightEdge
         height: mainWindow.height
         width: 275
+        onClosed: {
+            caller.setCity(optionen.inputState)
+            caller.triggerUpdate()
 
-        Optionen {}
+            wetter.wetterTitle.text = caller.getCity() // Standort
+            wetter.wetterModel.get(0).value = caller.getTemperature() // Temperatur
+            wetter.wetterModel.get(2).value = caller.getWindspeed() // Windgeschwindigkeit
+        }
+
+        Optionen {
+            id: optionen
+        }
+
         Button {
             id: drawerClose
             font.pixelSize: 30
@@ -46,7 +50,10 @@ ApplicationWindow {
         }
     }
 
-    Wetter {}
+    Wetter {
+        id: wetter
+    }
+
     Button {
         id: drawerOpen
         objectName: "drawerOpen"
@@ -59,12 +66,6 @@ ApplicationWindow {
         }
         Material.background: blue
         Material.foreground: white
-        onClicked: {
-                console.log("Hier Cliecked Before: ")
-                caller.getCity();
-                caller.setCity('Deine MUM');
-                caller.getCity();
-                console.log("Hier Cliecked After: ")
-                }
+        onClicked: drawer.open()
     }
 }

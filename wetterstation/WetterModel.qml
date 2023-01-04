@@ -2,15 +2,23 @@ import QtQuick 2.15
 
 ListModel {
     ListElement {
-        name: "Bill Smith"
-        number: "555 3264"
+        name: "Temperatur"
+        value: ""
     }
     ListElement {
-        name: "John Brown"
-        number: "555 8426"
+        name: "Regenwahrscheinlichkeit"
+        value: ""
     }
     ListElement {
-        name: "Sam Wise"
-        number: "555 0473"
+        name: "Windgeschwindigkeit"
+        value: ""
+    }
+    ListElement {
+        name: "Luftfeuchte"
+        value: ""
+    }
+    ListElement {
+        name: "24-Stunden Vorschau"
+        value: ""
     }
 }

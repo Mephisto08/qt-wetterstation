@@ -6,6 +6,8 @@ import QtQuick.Layouts
 Page {
     id: wetter
     anchors.fill: parent
+    property alias wetterTitle : wetterTitle
+    property var wetterModel: WetterModel {}
 
     background: Image {
         source: "qrc:/images/background.jpeg"
@@ -14,7 +16,7 @@ Page {
     Label {
         id: wetterTitle
         objectName: "wetterTitle"
-        text: qsTr("Darmstadt")
+        text: caller.getCity()
         anchors {
             bottom: seperator.top
             horizontalCenter: parent.horizontalCenter
@@ -96,15 +98,18 @@ Page {
                 width: 180
                 height: 40
                 Column {
-                    Text { text: '<b>Name:</b> ' + name }
-                    Text { text: '<b>Number:</b> ' + number }
+                    Text {
+                        text: '<b>'+ name + ': </b> ' + value
+                        font.pixelSize: 24
+                        color: "red"
+                    }
                 }
             }
         }
 
         ListView {
             anchors.fill: rect
-            model: WetterModel {}
+            model: wetterModel
             delegate: wetterDelegate
             focus: true
         }
@@ -132,7 +137,7 @@ Page {
                 top: parent.top
             }
 
-
+            /*
             ListView {
                 anchors.fill: parent
                 model: WetterModel {}
@@ -140,6 +145,7 @@ Page {
                 orientation: Qt.Horizontal
                 focus: true
             }
+            */
         }
     }
 }
