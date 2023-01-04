@@ -37,6 +37,7 @@ class Caller : public QObject {
 private:
     QObject* mainPage;
     QString city = "Darmstadt";
+    QString lastCity = "Darmstadt";
     QString temperature = "...";
     QString winddirection = "...";
     QString windspeed = "...";
@@ -87,6 +88,7 @@ public:
     }
 
     Q_INVOKABLE void setCity( const QString& city) {
+        this->lastCity = this->city;
         this->city = city;
     }
 
@@ -147,7 +149,16 @@ public:
             QJsonObject sett2 = doc.object();
             QJsonValue rawResults = sett2.value(QString("results"));
             QJsonArray results = rawResults.toArray();
+            if (results.isEmpty()){
+                QObject* wetterTitle = this->mainPage->findChild<QObject *>("wetterTitle");
+                wetterTitle->setProperty("text", this->lastCity);
+                QObject* optionInputCity = this->mainPage->findChild<QObject *>("inputCity");
+                optionInputCity->setProperty("text", this->lastCity);
+                this->city = this->lastCity;
+                return;
+            }
             QJsonObject result = results[0].toObject();
+
             QString latitude = QString::number(result["latitude"].toDouble());
             QString longitude = QString::number(result["longitude"].toDouble());
 
