@@ -15,6 +15,13 @@ ApplicationWindow {
     property string white: "#FFFFFF"
     property string blue: "#0A83E0"
 
+    Connections {
+            target: caller
+            onUeConnectedChanged: {
+                console.log("Connected changed!")
+            }
+        }
+
     Drawer {
         id: drawer
         interactive: true
@@ -53,7 +60,11 @@ ApplicationWindow {
         Material.background: blue
         Material.foreground: white
         onClicked: {
-                    drawer.open()
+                console.log("Hier Cliecked Before: ")
+                caller.isConnected();
+                caller.setConnected(true, 'Deine MUM');
+                caller.isConnected()
+                console.log("Hier Cliecked After: ")
                 }
     }
 }

@@ -21,7 +21,11 @@
 #include <QTimer>
 #include <QDebug>
 #include <QString>
+#include <QQmlContext>
+
+#include "caller.h"
 using namespace std;
+
 
 void getWeather(QObject* mainPage, QString location) {
     QTimer timer;
@@ -77,13 +81,13 @@ void getWeather(QObject* mainPage, QString location) {
             QString temperature = QString::number(weather["temperature"].toDouble());
             QString winddirection = QString::number(weather["winddirection"].toDouble());
             QString windspeed = QString::number(weather["windspeed"].toDouble());
-            cout << endl << "WEATHER" << endl;
-            cout << "Time -> " << time.toStdString() << endl;
-            cout << "Temperature -> " << temperature.toStdString() << endl;
+            //cout << endl << "WEATHER" << endl;
+            //cout << "Time -> " << time.toStdString() << endl;
+            //cout << "Temperature -> " << temperature.toStdString() << endl;
             QObject* testItem = mainPage->findChild<QObject *>("wetterTitle");
             testItem->setProperty("text", temperature);
-            cout << "Winddirection -> " << winddirection.toStdString() << endl;
-            cout << "Windspeed -> " << windspeed.toStdString() << endl;
+            //cout << "Winddirection -> " << winddirection.toStdString() << endl;
+            //cout << "Windspeed -> " << windspeed.toStdString() << endl;
         });
         QObject::connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
         QObject::connect(manager, &QNetworkAccessManager::finished, rep, &QNetworkReply::deleteLater);
@@ -112,6 +116,7 @@ int main(int argc, char *argv[])
     }
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("caller", new Caller());
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     //QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
     //                 &app, [url](QObject *obj, const QUrl &objUrl) {
@@ -121,7 +126,6 @@ int main(int argc, char *argv[])
     //engine.load(url);
     QQmlComponent component(&engine, url);
     QObject *mainPage = component.create();
-
 
     QTimer timer;
     // for schleife die alle 10 sekunden ausgeführt wird
@@ -149,6 +153,7 @@ int main(int argc, char *argv[])
         QObject* timeItem = mainPage->findChild<QObject *>("wetterTime");
         timeItem->setProperty("text", actTimeQString);
 
+        // sekunden holen um abzugleichen, dass api call nur alle 60 sek durchgeführt wird
         std::ostringstream seconds;
         seconds << std::put_time(&tm, "%S");
         std::string secondsStr = seconds.str();
