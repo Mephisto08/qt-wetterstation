@@ -29,22 +29,21 @@ class Caller : public QObject
 {
     Q_OBJECT
 private:
-    bool m_ueConneted;
+    QString city;
 public:
     Caller();
     void getTextfield();
 
-    Q_INVOKABLE void setConnected(const bool& ueConnected, const QString& abs)
+    Q_INVOKABLE void setCity( const QString& abs)
     {
-        std::string absCpp = abs.toStdString();
-        cout << "Caller SET ABCD: " << absCpp << endl;
-        this->m_ueConneted = ueConnected;
+        this->city = abs;
     }
 
-    Q_INVOKABLE inline const bool& isConnected() const
+    Q_INVOKABLE inline const QString& getCity() const
     {
-        cout << "Caller IS EDFG: " << m_ueConneted << endl;
-        return this->m_ueConneted;
+        std::string stdCityString = this->city.toStdString();
+        cout << "Caller get City: " << stdCityString << endl;
+        return this->city;
     }
 
     ~Caller();

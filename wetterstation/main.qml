@@ -61,9 +61,9 @@ ApplicationWindow {
         Material.foreground: white
         onClicked: {
                 console.log("Hier Cliecked Before: ")
-                caller.isConnected();
-                caller.setConnected(true, 'Deine MUM');
-                caller.isConnected()
+                caller.getCity();
+                caller.setCity('Deine MUM');
+                caller.getCity();
                 console.log("Hier Cliecked After: ")
                 }
     }
