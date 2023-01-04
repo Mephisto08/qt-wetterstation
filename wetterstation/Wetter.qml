@@ -157,6 +157,22 @@ Page {
             weight: Font.DemiBold
         }
     }
+    Label {
+        id: wetterCode
+        objectName: "wetterCode"
+        text: qsTr("wetterCode")
+        anchors {
+            top: wetterLuftfeuchte.bottom
+            left: parent.left
+            leftMargin: 10
+            bottomMargin: 5
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
 
 
 

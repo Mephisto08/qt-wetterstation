@@ -24,7 +24,12 @@
 #include <QString>
 #include <QQmlContext>
 #include <QQuickItem>
+
+#include <map>
+#include <string>
+
 using namespace std;
+
 
 class Caller : public QObject {
     Q_OBJECT
@@ -35,6 +40,37 @@ private:
     QString temperature = "...";
     QString winddirection = "...";
     QString windspeed = "...";
+    QString weatherCode = "...";
+    std::map<int, std::string> wetterCodes {
+        {0, "Klarer Himmel"},
+        {1, "Hauptsächlich klar"},
+        {2, "Teilweise bewölkt"},
+        {3, "Bewölkt"},
+        {45, "Nebel"},
+        {48, "Ablagerung von Raureifnebel"},
+        {51, "Nieselregen: Leicht"},
+        {53, "Nieselregen: Mäßig"},
+        {55, "Nieselregen: Dicht"},
+        {56, "Gefriertrocknung: Leicht"},
+        {57, "Gefriertrocknung: Dicht"},
+        {61, "Regen: Leicht"},
+        {63, "Regen: Mäßig"},
+        {65, "Regen: Schwer"},
+        {66, "Eisregen: Leicht"},
+        {67, "Eisregen: Schwer"},
+        {71, "Schneefall: Leicht"},
+        {73, "Schneefall: Mäßig"},
+        {75, "Schneefall: Schwer"},
+        {77, "Schneekörner"},
+        {80, "Regenschauer: Leicht"},
+        {81, "Regenschauer: Mäßig"},
+        {82, "Regenschauer: Heftig"},
+        {85, "Schneeschauer: Leicht"},
+        {86, "Schneeschauer: Schwer"},
+        {95, "Gewitter: Leicht oder mäßig"},
+        {96, "Gewitter: Leichter Hagel"},
+        {99, "Gewitter: Schwerer Hagel"}
+    };
 
 public:
     Caller(QObject* mainPage) {
@@ -43,7 +79,11 @@ public:
     ~Caller() {}
 
     Q_INVOKABLE void triggerUpdate() {
-        this->getWeather();
+        try {
+            this->getWeather();
+        } catch (...) {
+        }
+
     }
 
     Q_INVOKABLE void setCity( const QString& city) {
@@ -52,6 +92,14 @@ public:
 
     Q_INVOKABLE inline const QString getCity() const {
         return this->city;
+    }
+
+    Q_INVOKABLE void setWeatherCode( const QString& weatherCode) {
+        this->weatherCode = weatherCode;
+    }
+
+    Q_INVOKABLE inline const QString getWeatherCode() const {
+        return this->weatherCode;
     }
 
     Q_INVOKABLE void setTemperature( const QString& temperature) {
@@ -142,17 +190,23 @@ public:
                 QString temperature = QString::number(weather["temperature"].toDouble());
                 QString windspeed = QString::number(weather["windspeed"].toDouble());
                 QString winddirection = QString::number(weather["winddirection"].toDouble());
+                int wetterCode = weather["weathercode"].toInt();
+                QString weatherCodeQS = QString::fromStdString(this->wetterCodes[wetterCode]);
 
                 this->setTemperature(temperature);
                 this->setWinddirection(winddirection);
                 this->setWindspeed(windspeed);
+                this->setWeatherCode(weatherCodeQS);
 
-                QObject* wetterTemp = this->mainPage->findChild<QObject *>("wetterTemperatur");
-                wetterTemp->setProperty("text", temperature);
-                QObject* wetterWindSpeed = this->mainPage->findChild<QObject *>("wetterWindgeschindigkeit");
-                wetterWindSpeed->setProperty("text", windspeed);
-                QObject* wetterWindDir = this->mainPage->findChild<QObject *>("wetterRichtung");
-                wetterWindDir->setProperty("text", winddirection);
+                QObject* wetterTempItem = this->mainPage->findChild<QObject *>("wetterTemperatur");
+                wetterTempItem->setProperty("text", temperature);
+                QObject* wetterWindSpeedItem = this->mainPage->findChild<QObject *>("wetterWindgeschindigkeit");
+                wetterWindSpeedItem->setProperty("text", windspeed);
+                QObject* wetterWindDirItem = this->mainPage->findChild<QObject *>("wetterRichtung");
+                wetterWindDirItem->setProperty("text", winddirection);
+                QObject* wetterCodeItem = this->mainPage->findChild<QObject *>("wetterCode");
+                wetterCodeItem->setProperty("text", weatherCodeQS);
+
 
             });
             QObject::connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);

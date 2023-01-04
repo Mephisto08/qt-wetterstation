@@ -57,7 +57,10 @@ int main(int argc, char *argv[])
     Caller* caller = new Caller(mainPage);
     engine.rootContext()->setContextProperty("caller", caller);
     // Initial api call for starting values
-    caller->getWeather();
+    try {
+        caller->getWeather();
+    } catch (...) {
+    }
 
     QTimer timer;
     // for schleife die alle 10 sekunden ausgeführt wird
@@ -90,7 +93,11 @@ int main(int argc, char *argv[])
         seconds << std::put_time(&tm, "%S");
         std::string secondsStr = seconds.str();
         if (secondsStr == "00"){
-            caller->getWeather();
+            try {
+                caller->getWeather();
+            } catch (...) {
+            }
+
         }
 
 
