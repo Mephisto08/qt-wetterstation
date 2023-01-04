@@ -24,10 +24,6 @@ ApplicationWindow {
         onClosed: {
             caller.setCity(optionen.inputState)
             caller.triggerUpdate()
-
-            wetter.wetterTitle.text = caller.getCity() // Standort
-            wetter.wetterModel.get(0).value = caller.getTemperature() // Temperatur
-            wetter.wetterModel.get(2).value = caller.getWindspeed() // Windgeschwindigkeit
         }
 
         Optionen {

@@ -108,6 +108,7 @@ Page {
 
         TextField {
             id: inputCity
+            objectName: "inputCity"
             text: inputState
             anchors {
                 top: optionenTitle.bottom

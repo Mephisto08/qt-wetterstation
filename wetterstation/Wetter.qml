@@ -5,8 +5,8 @@ import QtQuick.Layouts
 
 Page {
     id: wetter
+    objectName: "wetterPage"
     anchors.fill: parent
-    property alias wetterTitle : wetterTitle
     property var wetterModel: WetterModel {}
 
     background: Image {
@@ -77,43 +77,88 @@ Page {
         height: 3
     }
 
-    Rectangle {
-        id: rect
-        color: "transparent"
+    Label {
+        id: wetterTemperatur
+        objectName: "wetterTemperatur"
+        text: qsTr("wetterTemperatur")
         anchors {
-            verticalCenter: parent.verticalCenter
             top: seperator.bottom
-            bottom: scrollBar.top
             left: parent.left
-            right: parent.right
-            topMargin: 5
+            leftMargin: 10
             bottomMargin: 5
-            leftMargin: 5
-            rightMargin: 5
         }
-
-        Component {
-            id: wetterDelegate
-            Item {
-                width: 180
-                height: 40
-                Column {
-                    Text {
-                        text: '<b>'+ name + ': </b> ' + value
-                        font.pixelSize: 24
-                        color: "red"
-                    }
-                }
-            }
-        }
-
-        ListView {
-            anchors.fill: rect
-            model: wetterModel
-            delegate: wetterDelegate
-            focus: true
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
         }
     }
+    Label {
+        id: wetterRegenwahrschienlichkeit
+        objectName: "wetterRegenwahrschienlichkeit"
+        text: qsTr("wetterRegenwahrschienlichkeit")
+        anchors {
+            top: wetterTemperatur.bottom
+            left: parent.left
+            leftMargin: 10
+            bottomMargin: 5
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+    Label {
+        id: wetterWindgeschindigkeit
+        objectName: "wetterWindgeschindigkeit"
+        text: qsTr("wetterWindgeschindigkeit")
+        anchors {
+            top: wetterRegenwahrschienlichkeit.bottom
+            left: parent.left
+            leftMargin: 10
+            bottomMargin: 5
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+    Label {
+        id: wetterRichtung
+        objectName: "wetterRichtung"
+        text: qsTr("wetterRichtung")
+        anchors {
+            top: wetterWindgeschindigkeit.bottom
+            left: parent.left
+            leftMargin: 10
+            bottomMargin: 5
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+    Label {
+        id: wetterLuftfeuchte
+        objectName: "wetterLuftfeuchte"
+        text: qsTr("wetterLuftfeuchte")
+        anchors {
+            top: wetterRichtung.bottom
+            left: parent.left
+            leftMargin: 10
+            bottomMargin: 5
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+
+
 
     ScrollView {
         id: scrollBar
