@@ -6,5 +6,6 @@
         <file>WetterModel.qml</file>
         <file>images/background.jpeg</file>
         <file>images/wetterIconExample.png</file>
+        <file>HourlyData.qml</file>
     </qresource>
 </RCC>

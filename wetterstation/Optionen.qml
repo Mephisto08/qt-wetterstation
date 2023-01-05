@@ -102,6 +102,7 @@ Page {
                 onClicked: {
                     optionenTitle.visible = !optionenTitle.visible
                     model.checked = checked
+                    console.log("myClass.items >>> ", caller.temp24hours)
                 }
             }
         }

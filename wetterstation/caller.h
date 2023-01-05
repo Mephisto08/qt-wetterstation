@@ -34,7 +34,7 @@ using namespace std;
 
 class Caller : public QObject {
     Q_OBJECT
-
+    Q_PROPERTY(QVector<QString> temp24hours READ temp24hours WRITE setTemp24hours NOTIFY temp24hoursChanged)
 private:
     QObject* mainPage;
     // key = QML-Label Name => value= API call, Bezeichner auf der Oberfläche vor dem eigentlichen Wert
@@ -54,6 +54,7 @@ private:
     QString winddirection = "...";
     QString windspeed = "...";
     QString weatherCode = "...";
+    QVector<QString> m_temp24hours;
     std::map<int, std::string> wetterCodes {
         {0, "Klarer Himmel"},
         {1, "Hauptsächlich klar"},
@@ -170,6 +171,13 @@ public:
     Q_INVOKABLE inline const QString getWindspeed() const {
         return this->windspeed;
     }
+
+
+    QVector<QString> temp24hours() const
+    {
+        return m_temp24hours;
+    }
+
     void getWeather() {
         QTimer timer;
         QNetworkAccessManager* manager = new QNetworkAccessManager();
@@ -258,6 +266,14 @@ public:
                 hour << std::put_time(&tm, "%H");
                 int hourIndex = stoi(hour.str());
 
+                QVector<QString> tempvec;
+                for(int i = 0; i < 24; ++i){
+                    QString __ValueStr = QString::number(hourlyValuesObject["temperature_2m"][i].toDouble());
+                    tempvec.push_back(__ValueStr);
+                }
+                setTemp24hours(tempvec);
+                emit temp24hoursChanged();
+
                 // Wenn Label welches eine Einheit und Wert hat hier ein else if mit dem setter einfügen. Zusätzlich in map einfügen
                 for (const auto& [key, value] : this->wetterOptions)
                 {
@@ -296,6 +312,12 @@ public:
         QObject::connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
         QObject::connect(manager, &QNetworkAccessManager::finished, rep, &QNetworkReply::deleteLater);
     }
+
+    void setTemp24hours(const QVector<QString> &temp24hours){
+        m_temp24hours = temp24hours;
+    };
+signals:
+    void temp24hoursChanged();
 };
 
 #endif // CALLER_H

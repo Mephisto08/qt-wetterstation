@@ -235,24 +235,11 @@ Page {
             bottomMargin: 5
         }
 
-        Rectangle {
-            color: "black"
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-                top: parent.top
-            }
-
-            /*
             ListView {
-                anchors.fill: parent
-                model: WetterModel {}
-                delegate: wetterDelegate
-                orientation: Qt.Horizontal
-                focus: true
+                height: contentHeight
+                orientation: ListView.Horizontal
+                model: caller.temp24hours
+                        delegate: Text { text: modelData }
             }
-            */
-        }
     }
 }
