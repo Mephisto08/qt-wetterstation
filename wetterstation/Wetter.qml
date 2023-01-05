@@ -115,7 +115,7 @@ Page {
             horizontalCenter: parent.horizontalCenter
         }
         font {
-            pixelSize: 30
+            pointSize: 30
             family: "Verdana"
             weight: Font.DemiBold
         }
