@@ -5,5 +5,6 @@
         <file>Optionen.qml</file>
         <file>WetterModel.qml</file>
         <file>images/background.jpeg</file>
+        <file>images/wetterIconExample.png</file>
     </qresource>
 </RCC>

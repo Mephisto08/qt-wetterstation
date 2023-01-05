@@ -77,82 +77,30 @@ Page {
         height: 3
     }
 
+    // Mittig
+    Image {
+        id: wetterIcon
+        objectName: "wetterIcon"
+        source: "qrc:/images/wetterIconExample.png"
+        width: 60
+        height: 60
+        anchors {
+            verticalCenter: parent.verticalCenter
+            right: parent.horizontalCenter
+            rightMargin: 50
+        }
+    }
     Label {
         id: wetterTemperatur
         objectName: "wetterTemperatur"
-        text: qsTr("wetterTemperatur")
+        text: qsTr("Temp. °C")
         anchors {
-            top: seperator.bottom
-            left: parent.left
-            leftMargin: 10
-            bottomMargin: 5
+            verticalCenter: parent.verticalCenter
+            left: wetterIcon.right
+            leftMargin: 50
         }
         font {
-            pixelSize: 20
-            family: "Verdana"
-            weight: Font.DemiBold
-        }
-    }
-    Label {
-        id: wetterRegenwahrschienlichkeit
-        objectName: "wetterRegenwahrschienlichkeit"
-        text: qsTr("wetterRegenwahrschienlichkeit")
-        anchors {
-            top: wetterTemperatur.bottom
-            left: parent.left
-            leftMargin: 10
-            bottomMargin: 5
-        }
-        font {
-            pixelSize: 20
-            family: "Verdana"
-            weight: Font.DemiBold
-        }
-    }
-    Label {
-        id: wetterWindgeschindigkeit
-        objectName: "wetterWindgeschindigkeit"
-        text: qsTr("wetterWindgeschindigkeit")
-        anchors {
-            top: wetterRegenwahrschienlichkeit.bottom
-            left: parent.left
-            leftMargin: 10
-            bottomMargin: 5
-        }
-        font {
-            pixelSize: 20
-            family: "Verdana"
-            weight: Font.DemiBold
-        }
-    }
-    Label {
-        id: wetterRichtung
-        objectName: "wetterRichtung"
-        text: qsTr("wetterRichtung")
-        anchors {
-            top: wetterWindgeschindigkeit.bottom
-            left: parent.left
-            leftMargin: 10
-            bottomMargin: 5
-        }
-        font {
-            pixelSize: 20
-            family: "Verdana"
-            weight: Font.DemiBold
-        }
-    }
-    Label {
-        id: wetterLuftfeuchte
-        objectName: "wetterLuftfeuchte"
-        text: qsTr("wetterLuftfeuchte")
-        anchors {
-            top: wetterRichtung.bottom
-            left: parent.left
-            leftMargin: 10
-            bottomMargin: 5
-        }
-        font {
-            pixelSize: 20
+            pixelSize: 30
             family: "Verdana"
             weight: Font.DemiBold
         }
@@ -162,10 +110,103 @@ Page {
         objectName: "wetterCode"
         text: qsTr("wetterCode")
         anchors {
-            top: wetterLuftfeuchte.bottom
+            top: wetterIcon.bottom
+            topMargin: 0
+            horizontalCenter: parent.horizontalCenter
+        }
+        font {
+            pixelSize: 30
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+
+    // Links oben
+    /*
+    Label {
+        id: wetterRegenwahrschienlichkeit
+        objectName: "wetterRegenwahrschienlichkeit"
+        text: qsTr("Regenwahrsch. %")
+        anchors {
+            top: parent.top
             left: parent.left
-            leftMargin: 10
-            bottomMargin: 5
+            topMargin: parent.height * 0.20
+            leftMargin: parent.width * 0.10
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+    */
+    Label {
+        id: wetterRegenInMM
+        objectName: "wetterRegenInMM"
+        text: qsTr("wetterRegenInMM. mm")
+        anchors {
+            top: parent.top
+            left: parent.left
+            topMargin: parent.height * 0.20
+            leftMargin: parent.width * 0.10
+            /* Wenn wetterRegenwahrschienlichkeit einkommetiert ist
+            top: wetterRegenwahrschienlichkeit.bottom
+            left: parent.left
+            topMargin: 7
+            leftMargin: parent.width * 0.10
+            */
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+
+    // Rechts oben
+    Label {
+        id: wetterWindgeschindigkeit
+        objectName: "wetterWindgeschindigkeit"
+        text: qsTr("Windgeschwind. km/h")
+        anchors {
+            top: parent.top
+            right: parent.right
+            topMargin: parent.height * 0.20
+            rightMargin: parent.width * 0.10
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+    Label {
+        id: wetterWindRichtung
+        objectName: "wetterWindRichtung"
+        text: qsTr("Windrichtung")
+        anchors {
+            top: wetterWindgeschindigkeit.bottom
+            right: parent.right
+            topMargin: 10
+            rightMargin: parent.width * 0.10
+        }
+        font {
+            pixelSize: 20
+            family: "Verdana"
+            weight: Font.DemiBold
+        }
+    }
+
+    // Links unten
+    Label {
+        id: wetterWolkendichte
+        objectName: "wetterWolkendichte"
+        text: qsTr("wetterWolkendichte %")
+        anchors {
+            top: parent.top
+            left: parent.left
+            topMargin: parent.height * 0.70
+            leftMargin: parent.width * 0.10
         }
         font {
             pixelSize: 20
@@ -175,7 +216,11 @@ Page {
     }
 
 
+    // Rechts unten
+    // ...
 
+
+    // Unten
     ScrollView {
         id: scrollBar
         ScrollBar.horizontal.interactive: true
@@ -187,10 +232,11 @@ Page {
             bottom: parent.bottom
             leftMargin: 5
             rightMargin: 5
+            bottomMargin: 5
         }
 
         Rectangle {
-            color: "transparent"
+            color: "black"
             anchors {
                 left: parent.left
                 right: parent.right
