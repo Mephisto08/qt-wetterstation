@@ -10,6 +10,7 @@ Page {
     property var wetterModel: WetterModel {}
 
     background: Image {
+        objectName: "pageBackground"
         source: "qrc:/images/background.jpeg"
     }
 

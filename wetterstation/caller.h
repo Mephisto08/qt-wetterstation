@@ -397,6 +397,7 @@ public:
 
                 std::string weatherIcon = this->wetterIcons[weathercodeInt];
                 QObject* wetterIcon__Item = this->mainPage->findChild<QObject *>("wetterIcon");
+
                 // weatherCode Icon
                 std::string directory = "qrc:/images/";
                 if(hourIndex > 6 && hourIndex < 20){
@@ -406,8 +407,13 @@ public:
                     // night
                     directory += "night/";
                 }
+
                 QString iconPath = QString::fromStdString(directory + weatherIcon);
                 wetterIcon__Item->setProperty("source", iconPath);
+
+                QString backgroundPath = QString::fromStdString(directory + "background.jpeg");
+                QObject* background__Item = this->mainPage->findChild<QObject *>("pageBackground");
+                background__Item->setProperty("source", backgroundPath);
 
 
             });

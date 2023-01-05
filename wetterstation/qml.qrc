@@ -4,7 +4,6 @@
         <file>Wetter.qml</file>
         <file>Optionen.qml</file>
         <file>WetterModel.qml</file>
-        <file>images/background.jpeg</file>
         <file>images/wetterIconExample.png</file>
         <file>images/day/1.png</file>
         <file>images/day/10.png</file>
@@ -76,5 +75,7 @@
         <file>images/night/7.png</file>
         <file>images/night/8.png</file>
         <file>images/night/9.png</file>
+        <file>images/day/background.jpeg</file>
+        <file>images/night/background.jpeg</file>
     </qresource>
 </RCC>
