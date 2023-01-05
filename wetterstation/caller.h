@@ -301,31 +301,6 @@ public:
                 wetterWolkendichteItem->setProperty("text", "Windrichtung: " + winddirection_10m_ValueStr + winddirection_10m_rUnitStr);
                 this->setWinddirection("Windrichtung: " + winddirection_10m_ValueStr + winddirection_10m_rUnitStr);
 
-
-
-
-                /*
-                QString temperature = QString::number(weather["temperature"].toDouble());
-                QString windspeed = QString::number(weather["windspeed"].toDouble());
-                QString winddirection = QString::number(weather["winddirection"].toDouble());
-                int wetterCode = weather["weathercode"].toInt();
-                QString weatherCodeQS = QString::fromStdString(this->wetterCodes[wetterCode]);
-
-                this->setTemperature(temperature);
-                this->setWinddirection(winddirection);
-                this->setWindspeed(windspeed);
-                this->setWeatherCode(weatherCodeQS);
-
-                QObject* wetterTempItem = this->mainPage->findChild<QObject *>("wetterTemperatur");
-                wetterTempItem->setProperty("text", temperature+ " °C");
-                QObject* wetterWindSpeedItem = this->mainPage->findChild<QObject *>("wetterWindgeschindigkeit");
-                wetterWindSpeedItem->setProperty("text", windspeed);
-                QObject* wetterWindDirItem = this->mainPage->findChild<QObject *>("wetterWindRichtung");
-                wetterWindDirItem->setProperty("text", winddirection);
-                QObject* wetterCodeItem = this->mainPage->findChild<QObject *>("wetterCode");
-                wetterCodeItem->setProperty("text", weatherCodeQS);
-                */
-
             });
             QObject::connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
             QObject::connect(manager, &QNetworkAccessManager::finished, rep, &QNetworkReply::deleteLater);
