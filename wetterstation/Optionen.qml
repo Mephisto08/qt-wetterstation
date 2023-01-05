@@ -27,7 +27,15 @@ Page {
             checked: true
         },
         {
-            name: "Regenwahrscheinlichkeit",
+            name: "Wetter Icon",
+            checked: true
+        },
+        {
+            name: "Wetter Code",
+            checked: true
+        },
+        {
+            name: "Nierderschlag",
             checked: true
         },
         {
@@ -35,7 +43,11 @@ Page {
             checked: true
         },
         {
-            name: "Luftfeuchte",
+            name: "Windrichtung",
+            checked: true
+        },
+        {
+            name: "Bewölkung",
             checked: true
         },
         {
@@ -96,12 +108,14 @@ Page {
                     right: parent.right
                 }
                 font.pixelSize: 15
-                padding: 10
+                padding: 5
                 leftPadding: 20
                 rightPadding: 20
                 onClicked: {
-                    optionenTitle.visible = !optionenTitle.visible
+                    //optionenTitle.visible = !optionenTitle.visible
                     model.checked = checked
+                    caller.updateVisibility(model.name, model.checked)
+
                 }
             }
         }
@@ -122,22 +136,6 @@ Page {
             topPadding: 5
             bottomPadding: 5
             onTextChanged: inputState = text
-        }
-
-        Button {
-            id: test
-            text: "Read all"
-            anchors {
-                right: parent.right
-                bottom: parent.bottom
-            }
-            onClicked: {
-                console.log()
-                console.log("Standort => " + inputState)
-                for(const index in optionStates) {
-                    console.log(checkModel.get(index).name + " => " + checkModel.get(index).checked)
-                }
-            }
         }
     }
 }

@@ -47,6 +47,7 @@ private:
     };
     QString city = "Darmstadt";
     QString lastCity = "Darmstadt";
+    QString timezone = "Europe/Berlin";
     QString temperature = "...";
     QString cloudcover = "...";
     QString rainMM = "...";
@@ -84,6 +85,36 @@ private:
         {96, "Gewitter: Leichter Hagel"},
         {99, "Gewitter: Schwerer Hagel"}
     };
+    std::map<int, std::string> wetterIcons {
+        {0,  "24.png"},    // Klarer Himmel
+        {1,  "22.png"},    // Hauptsächlich klar
+        {2,  "21.png"},    // Teilweise bewölkt
+        {3,  "23.png"},    // Bewölkt
+        {45, "16.png"},    // Nebel
+        {48, "17.png"},    // Ablagerung von Raureifnebel
+        {51, "15.png"},    // Nieselregen: Leicht
+        {53, "15.png"},    // Nieselregen: Mäßig
+        {55, "14.png"},    // Nieselregen: Dicht
+        {56, "29.png"},    // Gefriertrocknung: Leicht
+        {57, "29.png"},    // Gefriertrocknung: Dicht
+        {61, "15.png"},    // Regen: Leicht
+        {63, "14.png"},    // Regen: Mäßig
+        {65, "14.png"},    // Regen: Schwer
+        {66, "8.png"},    // Eisregen: Leicht
+        {67, "13.png"},    // Eisregen: Schwer
+        {71, "7.png"},    // Schneefall: Leicht
+        {73, "7.png"},    // Schneefall: Mäßig
+        {75, "6.png"},    // Schneefall: Schwer
+        {77, "6.png"},    // Schneekörner
+        {80, "12.png"},    // Regenschauer: Leicht
+        {81, "12.png"},    // Regenschauer: Mäßig
+        {82, "9.png"},    // Regenschauer: Heftig
+        {85, "5.png"},    // Schneeschauer: Leicht
+        {86, "5.png"},    // Schneeschauer: Schwer
+        {95, "2.png"},    // Gewitter: Leicht oder mäßig
+        {96, "2.png"},    // Gewitter: Leichter Hagel
+        {99, "2.png"},    // Gewitter: Schwerer Hagel
+    };
 
 public:
     Caller(QObject* mainPage) {
@@ -92,11 +123,54 @@ public:
     ~Caller() {}
 
     Q_INVOKABLE void triggerUpdate() {
-        try {
-            this->getWeather();
-        } catch (...) {
-        }
+        this->getWeather();
+    }
 
+    Q_INVOKABLE void updateVisibility(QString option, bool checked) {
+        string optionString = option.toStdString();
+        if(optionString == "Datum"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterDate");
+            updateDatum->setProperty("visible", checked);
+        }else if (optionString == "Standort"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterTitle");
+            updateDatum->setProperty("visible", checked);
+        }else if (optionString == "Uhrzeit"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterTime");
+            updateDatum->setProperty("visible", checked);
+
+        }else if (optionString == "Wetter Icon"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterIcon");
+            updateDatum->setProperty("visible", checked);
+        }else if (optionString == "Temperatur"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterTemperatur");
+            updateDatum->setProperty("visible", checked);
+        }else if (optionString == "Wetter Code"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterCode");
+            updateDatum->setProperty("visible", checked);
+
+
+        }else if (optionString == "Nierderschlag"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterRegenInMM");
+            updateDatum->setProperty("visible", checked);
+
+
+        }else if (optionString == "Windgeschwindigkeit"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterWindgeschindigkeit");
+            updateDatum->setProperty("visible", checked);
+        }else if (optionString == "Windrichtung"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterWindRichtung");
+            updateDatum->setProperty("visible", checked);
+
+
+        }else if (optionString == "Bewölkung"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("wetterWolkendichte");
+            updateDatum->setProperty("visible", checked);
+
+
+        }else if (optionString == "24-Stunden Vorschau"){
+            QObject* updateDatum = this->mainPage->findChild<QObject *>("scrollBar");
+            updateDatum->setProperty("visible", checked);
+        }
     }
     /* Default Setter Getter
     Q_INVOKABLE void setX( const QString& __) {
@@ -204,6 +278,8 @@ public:
 
             QString latitude = QString::number(result["latitude"].toDouble());
             QString longitude = QString::number(result["longitude"].toDouble());
+            QString timezone = result["timezone"].toString();
+            this->timezone = timezone;
 
             QString correctCityName = QString(result["name"].toString());
             this->setCity(correctCityName);
@@ -215,7 +291,7 @@ public:
             QTimer timer;
             QNetworkAccessManager* manager = new QNetworkAccessManager();
 
-            QString weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude="+latitude+"&longitude="+longitude+"&hourly=temperature_2m,precipitation,weathercode,cloudcover,windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FBerlin";
+            QString weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude="+latitude+"&longitude="+longitude+"&hourly=temperature_2m,precipitation,weathercode,cloudcover,windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=" + timezone;
 
             QNetworkRequest weatherRequest;
             timer.start(30000);
@@ -282,12 +358,32 @@ public:
                         this->setWinddirection(std::get<1>(value) + __ValueStr + __UnitStr);
                     }
                 }
-                // weatherCode
+
                 int weathercodeInt = hourlyValuesObject["weathercode"][hourIndex].toInt();
                 QString weathercodeQS = QString::fromStdString(this->wetterCodes[weathercodeInt]);
                 QObject* wetterCode__Item = this->mainPage->findChild<QObject *>("wetterCode");
                 wetterCode__Item->setProperty("text", weathercodeQS);
                 this->setWeatherCode(weathercodeQS);
+
+
+                // TODO: TIME berechnen
+                qDebug() << this->timezone;
+                qDebug() << &tm;
+
+                std::string weatherIcon = this->wetterIcons[weathercodeInt];
+                QObject* wetterIcon__Item = this->mainPage->findChild<QObject *>("wetterIcon");
+                // weatherCode Icon
+                std::string directory = "qrc:/images/";
+                if(hourIndex > 6 && hourIndex < 20){
+                    // day
+                    directory += "day/";
+                }else{
+                    // night
+                    directory += "night/";
+                }
+                QString iconPath = QString::fromStdString(directory + weatherIcon);
+                wetterIcon__Item->setProperty("source", iconPath);
+
 
             });
             QObject::connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
