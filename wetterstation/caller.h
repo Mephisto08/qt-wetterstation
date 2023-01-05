@@ -24,7 +24,8 @@
 #include <QString>
 #include <QQmlContext>
 #include <QQuickItem>
-
+#include <QDateTime>
+#include <QTimeZone>
 #include <map>
 #include <tuple>
 #include <string>
@@ -46,8 +47,10 @@ private:
         {"wetterWindRichtung", std::make_tuple("winddirection_10m", "Richtung: ")},
     };
     QString city = "Darmstadt";
+    bool editingOptions = false;
     QString lastCity = "Darmstadt";
     QString timezone = "Europe/Berlin";
+    QDateTime actualDate;
     QString temperature = "...";
     QString cloudcover = "...";
     QString rainMM = "...";
@@ -122,6 +125,17 @@ public:
     }
     ~Caller() {}
 
+    QString getTimezone(){
+        return this->timezone;
+    }
+
+    void setActualDate(QDateTime date){
+        this->actualDate = date;
+    }
+    QDateTime getActualDate(){
+        return this->actualDate;
+    }
+
     Q_INVOKABLE void triggerUpdate() {
         this->getWeather();
     }
@@ -181,6 +195,14 @@ public:
         return this->x;
     }
     */
+    Q_INVOKABLE void setEditingOptions( const bool editingOptions) {
+        this->editingOptions = editingOptions;
+    }
+
+    Q_INVOKABLE inline  bool getEditingOptions() const {
+        return this->editingOptions;
+    }
+
     Q_INVOKABLE void setRainPrecipitaion( const QString& rainPrecipitaion) {
         this->rainPrecipitaion = rainPrecipitaion;
     }
@@ -247,7 +269,7 @@ public:
     void getWeather() {
         QTimer timer;
         QNetworkAccessManager* manager = new QNetworkAccessManager();
-        QString geoUrl = "https://geocoding-api.open-meteo.com/v1/search?count=1&name="+this->city;
+        QString geoUrl = "https://geocoding-api.open-meteo.com/v1/search?count=1&language=de&name="+this->city;
 
         QNetworkRequest geoRequest;
         timer.start(30000);
@@ -279,7 +301,17 @@ public:
             QString latitude = QString::number(result["latitude"].toDouble());
             QString longitude = QString::number(result["longitude"].toDouble());
             QString timezone = result["timezone"].toString();
+            qDebug() << "TIMTIMTIMNT" <<timezone;
             this->timezone = timezone;
+            QTimeZone targetTimeZone(this->getTimezone().toUtf8());
+            QTimeZone currentTimeZone = QTimeZone::systemTimeZone();
+
+            int currentOffsetFromUtc = currentTimeZone.offsetFromUtc(QDateTime::currentDateTime());
+            int targetOffsetFromUtc = targetTimeZone.offsetFromUtc(QDateTime::currentDateTime());
+
+            QDateTime currentDateTime = QDateTime::currentDateTime();
+            QDateTime targetDateTime = currentDateTime.addSecs(targetOffsetFromUtc - currentOffsetFromUtc);
+            this->setActualDate(targetDateTime);
 
             QString correctCityName = QString(result["name"].toString());
             this->setCity(correctCityName);
@@ -328,11 +360,9 @@ public:
                 // aktuelles Stunde holen um Index für JsonArrays zu bekommen
                 // da immer neuer Request, erstmal nur ersten 24 Einträge interresant für aktuelle ansicht,
                 // wenn stündliche tagesvorraussicht gewollt ist, muss noch der Tag berechnet werden und ein Offset zu dem index addiert werden
-                auto t = std::time(nullptr);
-                auto tm = *std::localtime(&t);
-                std::ostringstream hour;
-                hour << std::put_time(&tm, "%H");
-                int hourIndex = stoi(hour.str());
+
+                std::string time = this->actualDate.toString("H").toStdString();
+                int hourIndex = stoi(time);
 
                 // Wenn Label welches eine Einheit und Wert hat hier ein else if mit dem setter einfügen. Zusätzlich in map einfügen
                 for (const auto& [key, value] : this->wetterOptions)
@@ -364,11 +394,6 @@ public:
                 QObject* wetterCode__Item = this->mainPage->findChild<QObject *>("wetterCode");
                 wetterCode__Item->setProperty("text", weathercodeQS);
                 this->setWeatherCode(weathercodeQS);
-
-
-                // TODO: TIME berechnen
-                qDebug() << this->timezone;
-                qDebug() << &tm;
 
                 std::string weatherIcon = this->wetterIcons[weathercodeInt];
                 QObject* wetterIcon__Item = this->mainPage->findChild<QObject *>("wetterIcon");
