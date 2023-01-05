@@ -26,6 +26,7 @@
 #include <QQuickItem>
 
 #include <map>
+#include <tuple>
 #include <string>
 
 using namespace std;
@@ -36,6 +37,14 @@ class Caller : public QObject {
 
 private:
     QObject* mainPage;
+    // key = QML-Label Name => value= API call, Bezeichner auf der Oberfläche vor dem eigentlichen Wert
+    std::map<QString, std::tuple<QString, QString>> wetterOptions = {
+        {"wetterTemperatur", std::make_tuple("temperature_2m", "")},
+        {"wetterRegenInMM", std::make_tuple("precipitation", "Nierschlag: ")},
+        {"wetterWolkendichte", std::make_tuple("cloudcover", "Bedeckung: ")},
+        {"wetterWindgeschindigkeit", std::make_tuple("windspeed_10m", "Wind: ")},
+        {"wetterWindRichtung", std::make_tuple("winddirection_10m", "Richtung: ")},
+    };
     QString city = "Darmstadt";
     QString lastCity = "Darmstadt";
     QString temperature = "...";
@@ -98,8 +107,8 @@ public:
         return this->x;
     }
     */
-    Q_INVOKABLE void setRainPrecipitaion( const QString& __) {
-        this->rainPrecipitaion = __;
+    Q_INVOKABLE void setRainPrecipitaion( const QString& rainPrecipitaion) {
+        this->rainPrecipitaion = rainPrecipitaion;
     }
 
     Q_INVOKABLE inline const QString getRainPrecipitaion() const {
@@ -249,57 +258,36 @@ public:
                 hour << std::put_time(&tm, "%H");
                 int hourIndex = stoi(hour.str());
 
+                // Wenn Label welches eine Einheit und Wert hat hier ein else if mit dem setter einfügen. Zusätzlich in map einfügen
+                for (const auto& [key, value] : this->wetterOptions)
+                {
+                    QString __UnitStr = hourlyUnitObject[std::get<0>(value)].toString();
+                    QString __ValueStr = QString::number(hourlyValuesObject[std::get<0>(value)][hourIndex].toDouble());
+                    QObject* __Item = this->mainPage->findChild<QObject *>(key);
+                    __Item->setProperty("text", std::get<1>(value) + __ValueStr + __UnitStr);
 
-                // Temperatur
-                QString temperature_2m__UnitStr = hourlyUnitObject["temperature_2m"].toString();
-                QString temperature_2m__ValueStr = QString::number(hourlyValuesObject["temperature_2m"][hourIndex].toDouble());
-                QObject* wetterTemperatur__Item = this->mainPage->findChild<QObject *>("wetterTemperatur");
-                wetterTemperatur__Item->setProperty("text", temperature_2m__ValueStr + temperature_2m__UnitStr);
-                this->setTemperature(temperature_2m__ValueStr + temperature_2m__UnitStr);
+                    if(key.toStdString() == "setTemperature"){
+                        this->setTemperature(std::get<1>(value) + __ValueStr + __UnitStr);
 
+                    }else if(key.toStdString() == "setRainMM"){
+                        this->setRainMM(std::get<1>(value) + __ValueStr + __UnitStr);
+                    }
+                    else if(key.toStdString() == "setCloudcover"){
+                        this->setCloudcover(std::get<1>(value) + __ValueStr + __UnitStr);
+                    }
+                    else if(key.toStdString() == "setWindspeed"){
+                        this->setWindspeed(std::get<1>(value) + __ValueStr + __UnitStr);
+                    }
+                    else if(key.toStdString() == "setWinddirection"){
+                        this->setWinddirection(std::get<1>(value) + __ValueStr + __UnitStr);
+                    }
+                }
                 // weatherCode
                 int weathercodeInt = hourlyValuesObject["weathercode"][hourIndex].toInt();
                 QString weathercodeQS = QString::fromStdString(this->wetterCodes[weathercodeInt]);
                 QObject* wetterCode__Item = this->mainPage->findChild<QObject *>("wetterCode");
                 wetterCode__Item->setProperty("text", weathercodeQS);
                 this->setWeatherCode(weathercodeQS);
-
-                /*
-                // precipitation
-                QString precipitation__UnitStr = hourlyUnitObject["precipitation"].toString();
-                QString precipitation__ValueStr = QString::number(hourlyValuesObject["precipitation"][hourIndex].toDouble());
-                QObject* wetterRegenwahrschienlichkeit__Item = this->mainPage->findChild<QObject *>("wetterRegenwahrschienlichkeit");
-                wetterRegenwahrschienlichkeit__Item->setProperty("text", "Regenwahrsch.: " + precipitation__ValueStr + precipitation__UnitStr);
-                this->setRainPrecipitaion("Regenwahrsch.: " + precipitation__ValueStr + precipitation__UnitStr);
-                */
-
-                // rainMM
-                QString rain__UnitStr = hourlyUnitObject["precipitation"].toString();
-                QString rain__ValueStr = QString::number(hourlyValuesObject["precipitation"][hourIndex].toDouble());
-                QObject* wetterRegenInMM__Item = this->mainPage->findChild<QObject *>("wetterRegenInMM");
-                wetterRegenInMM__Item->setProperty("text", "Nierderschlag: " + rain__ValueStr + rain__UnitStr);
-                this->setRainMM("Niederschlag: " + rain__ValueStr + rain__UnitStr);
-
-                // cloudcover
-                QString cloudcover__UnitStr = hourlyUnitObject["cloudcover"].toString();
-                QString cloudcover__ValueStr = QString::number(hourlyValuesObject["cloudcover"][hourIndex].toDouble());
-                QObject* wetterWolkendichte__Item = this->mainPage->findChild<QObject *>("wetterWolkendichte");
-                wetterWolkendichte__Item->setProperty("text", "Bedeckung: " + cloudcover__ValueStr + cloudcover__UnitStr);
-                this->setCloudcover("Bedeckung: " + cloudcover__ValueStr + cloudcover__UnitStr);
-
-                // windspeed_10m
-                QString windspeed_10m__UnitStr = hourlyUnitObject["windspeed_10m"].toString();
-                QString windspeed_10m__ValueStr = QString::number(hourlyValuesObject["windspeed_10m"][hourIndex].toDouble());
-                QObject* wetterWindgeschindigkeit__Item = this->mainPage->findChild<QObject *>("wetterWindgeschindigkeit");
-                wetterWindgeschindigkeit__Item->setProperty("text", "Windgesch.: " + windspeed_10m__ValueStr + windspeed_10m__UnitStr);
-                this->setWindspeed("Windgesch.:: " + windspeed_10m__ValueStr + windspeed_10m__UnitStr);
-
-                // winddirection_10m
-                QString winddirection_10m_rUnitStr = hourlyUnitObject["winddirection_10m"].toString();
-                QString winddirection_10m_ValueStr = QString::number(hourlyValuesObject["winddirection_10m"][hourIndex].toDouble());
-                QObject* wetterWolkendichteItem = this->mainPage->findChild<QObject *>("wetterWindRichtung");
-                wetterWolkendichteItem->setProperty("text", "Windrichtung: " + winddirection_10m_ValueStr + winddirection_10m_rUnitStr);
-                this->setWinddirection("Windrichtung: " + winddirection_10m_ValueStr + winddirection_10m_rUnitStr);
 
             });
             QObject::connect(manager, &QNetworkAccessManager::finished, manager, &QNetworkAccessManager::deleteLater);
