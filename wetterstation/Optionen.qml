@@ -137,21 +137,5 @@ Page {
             bottomPadding: 5
             onTextChanged: inputState = text
         }
-
-        Button {
-            id: test
-            text: "Read all"
-            anchors {
-                right: parent.right
-                bottom: parent.bottom
-            }
-            onClicked: {
-                console.log()
-                console.log("Standort => " + inputState)
-                for(const index in optionStates) {
-                    console.log(checkModel.get(index).name + " => " + checkModel.get(index).checked)
-                }
-            }
-        }
     }
 }
