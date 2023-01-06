@@ -226,6 +226,7 @@ Page {
         ScrollBar.horizontal.interactive: true
         background: null
         contentHeight: 50
+        contentWidth: contentChildren
         anchors {
             left: parent.left
             right: parent.right
@@ -235,24 +236,21 @@ Page {
             bottomMargin: 5
         }
 
-        Rectangle {
-            color: "black"
-            anchors {
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-                top: parent.top
+        GridLayout{
+            columns: 24
+            columnSpacing: 10
+            anchors.fill: parent
+            Repeater {
+                model: 24
+                delegate: Item {
+                    width: 100
+                    height: 50
+                    Column {
+                        Text { text: "Zeit: " + caller.time24hours[index] }
+                        Text { text: "Temperatur: " +caller.temp24hours[index] }
+                    }
+                }
             }
-
-            /*
-            ListView {
-                anchors.fill: parent
-                model: WetterModel {}
-                delegate: wetterDelegate
-                orientation: Qt.Horizontal
-                focus: true
-            }
-            */
         }
     }
 }
