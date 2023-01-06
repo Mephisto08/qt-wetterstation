@@ -1,4 +1,3 @@
-#include "qnetworkreply.h"
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QLocale>
@@ -20,6 +19,8 @@
 #include <QString>
 #include <QQmlContext>
 #include <QQuickItem>
+#include <QDateTime>
+#include <QTimeZone>
 #include "caller.h"
 using namespace std;
 
@@ -63,36 +64,31 @@ int main(int argc, char *argv[])
     // for schleife die alle 10 sekunden ausgeführt wird
     QObject::connect(&timer, &QTimer::timeout, [&]() {
 
-        // aktuelles Datum holen
-        auto t = std::time(nullptr);
-        auto tm = *std::localtime(&t);
+        QTimeZone targetTimeZone(caller->getTimezone().toUtf8());
+        QTimeZone currentTimeZone = QTimeZone::systemTimeZone();
 
-        // aktuelles Datum in string und dann Qstring umwandeln
-        std::ostringstream actDate;
-        actDate << std::put_time(&tm, "%d. %b %Y ");
-        std::string actDateString = actDate.str();
-        QString actDateQString = QString::fromStdString(actDateString);
+        int currentOffsetFromUtc = currentTimeZone.offsetFromUtc(QDateTime::currentDateTime());
+        int targetOffsetFromUtc = targetTimeZone.offsetFromUtc(QDateTime::currentDateTime());
+
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+        QDateTime targetDateTime = currentDateTime.addSecs(targetOffsetFromUtc - currentOffsetFromUtc);
+        caller->setActualDate(targetDateTime);
+
+        QString date = targetDateTime.toString("d. MMM yyyy");
+        QString time = targetDateTime.toString("HH:mm:ss") + " Uhr";
+        std::string seconds = targetDateTime.toString("ss").toStdString();
+
         // date qml elelment holen und text setzen
         QObject* dateItem = mainPage->findChild<QObject *>("wetterDate");
-        dateItem->setProperty("text", actDateQString);
+        dateItem->setProperty("text", date);
 
-        // aktuelle Zeit in string und dann Qstring umwandeln
-        std::ostringstream actTime;
-        actTime << std::put_time(&tm, "%H:%M:%S Uhr");
-        std::string actTimeString = actTime.str();
-        QString actTimeQString = QString::fromStdString(actTimeString);
         // time qml elelment holen und text setzen
         QObject* timeItem = mainPage->findChild<QObject *>("wetterTime");
-        timeItem->setProperty("text", actTimeQString);
+        timeItem->setProperty("text", time);
 
-        // sekunden holen um abzugleichen, dass api call nur alle 60 sek durchgeführt wird
-        std::ostringstream seconds;
-        seconds << std::put_time(&tm, "%S");
-        std::string secondsStr = seconds.str();
-        if (secondsStr == "00"){
+        if (seconds == "00" && !caller->getEditingOptions()){
             caller->getWeather();
         }
-
 
         /*else if(secondsStr == "30"){
             QObject* testItem = mainPage->findChild<QObject *>("wetterTitle");

@@ -26,6 +26,7 @@ ApplicationWindow {
         height: mainWindow.height
         width: 275
         onClosed: {
+            caller.setEditingOptions(false)
             caller.setCity(optionen.inputState)
             caller.triggerUpdate()
         }
@@ -46,7 +47,9 @@ ApplicationWindow {
             }
             Material.background: blue
             Material.foreground: white
-            onClicked: drawer.close()
+            onClicked: {
+                drawer.close()
+            }
         }
     }
 
@@ -66,6 +69,9 @@ ApplicationWindow {
         }
         Material.background: blue
         Material.foreground: white
-        onClicked: drawer.open()
+        onClicked: {
+            caller.setEditingOptions(true)
+            drawer.open()
+        }
     }
 }

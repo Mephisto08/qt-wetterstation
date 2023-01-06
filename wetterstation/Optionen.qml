@@ -27,7 +27,15 @@ Page {
             checked: true
         },
         {
-            name: "Regenwahrscheinlichkeit",
+            name: "Wetter Icon",
+            checked: true
+        },
+        {
+            name: "Wetter Code",
+            checked: true
+        },
+        {
+            name: "Nierderschlag",
             checked: true
         },
         {
@@ -35,7 +43,11 @@ Page {
             checked: true
         },
         {
-            name: "Luftfeuchte",
+            name: "Windrichtung",
+            checked: true
+        },
+        {
+            name: "Bewölkung",
             checked: true
         },
         {
@@ -96,13 +108,14 @@ Page {
                     right: parent.right
                 }
                 font.pixelSize: 15
-                padding: 10
+                padding: 5
                 leftPadding: 20
                 rightPadding: 20
                 onClicked: {
-                    optionenTitle.visible = !optionenTitle.visible
+                    //optionenTitle.visible = !optionenTitle.visible
                     model.checked = checked
-                    console.log("myClass.items >>> ", caller.temp24hours)
+                    caller.updateVisibility(model.name, model.checked)
+
                 }
             }
         }

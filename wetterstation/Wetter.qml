@@ -10,6 +10,7 @@ Page {
     property var wetterModel: WetterModel {}
 
     background: Image {
+        objectName: "pageBackground"
         source: "qrc:/images/background.jpeg"
     }
 
@@ -82,8 +83,6 @@ Page {
         id: wetterIcon
         objectName: "wetterIcon"
         source: "qrc:/images/wetterIconExample.png"
-        width: 60
-        height: 60
         anchors {
             verticalCenter: parent.verticalCenter
             right: parent.horizontalCenter
@@ -223,6 +222,7 @@ Page {
     // Unten
     ScrollView {
         id: scrollBar
+        objectName: "scrollBar"
         ScrollBar.horizontal.interactive: true
         background: null
         contentHeight: 50
