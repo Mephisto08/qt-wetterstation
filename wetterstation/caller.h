@@ -31,10 +31,11 @@
 
 using namespace std;
 
-
 class Caller : public QObject {
     Q_OBJECT
     Q_PROPERTY(QVector<QString> temp24hours READ temp24hours WRITE setTemp24hours NOTIFY temp24hoursChanged)
+    Q_PROPERTY(QVector<QString> time24hours READ time24hours WRITE setTime24hours NOTIFY time24hoursChanged)
+
 private:
     QObject* mainPage;
     // key = QML-Label Name => value= API call, Bezeichner auf der Oberfläche vor dem eigentlichen Wert
@@ -45,6 +46,7 @@ private:
         {"wetterWindgeschindigkeit", std::make_tuple("windspeed_10m", "Wind: ")},
         {"wetterWindRichtung", std::make_tuple("winddirection_10m", "Richtung: ")},
     };
+
     QString city = "Darmstadt";
     QString lastCity = "Darmstadt";
     QString temperature = "...";
@@ -55,6 +57,7 @@ private:
     QString windspeed = "...";
     QString weatherCode = "...";
     QVector<QString> m_temp24hours;
+    QVector<QString> m_time24hours;
     std::map<int, std::string> wetterCodes {
         {0, "Klarer Himmel"},
         {1, "Hauptsächlich klar"},
@@ -99,6 +102,7 @@ public:
         }
 
     }
+
     /* Default Setter Getter
     Q_INVOKABLE void setX( const QString& __) {
         this->x = __;
@@ -172,10 +176,19 @@ public:
         return this->windspeed;
     }
 
+    enum Roles {
+            TimeRole = Qt::UserRole + 1,
+            TemperatureRole
+        };
+
 
     QVector<QString> temp24hours() const
     {
         return m_temp24hours;
+    }
+    QVector<QString> time24hours() const
+    {
+        return m_time24hours;
     }
 
     void getWeather() {
@@ -266,13 +279,19 @@ public:
                 hour << std::put_time(&tm, "%H");
                 int hourIndex = stoi(hour.str());
 
-                QVector<QString> tempvec;
+
+                QVector<QString> tmptempvec;
+                QVector<QString> tmptimevec;
                 for(int i = 0; i < 24; ++i){
-                    QString __ValueStr = QString::number(hourlyValuesObject["temperature_2m"][i].toDouble());
-                    tempvec.push_back(__ValueStr);
+                    QString temperature = QString::number(hourlyValuesObject["temperature_2m"][i].toDouble());
+                    QString time = hourlyValuesObject["time"][i].toString().mid(11,2)+":00";
+
+
+                    tmptempvec.push_back(temperature);
+                    tmptimevec.push_back(time);
                 }
-                setTemp24hours(tempvec);
-                emit temp24hoursChanged();
+                setTemp24hours(tmptempvec);
+                setTime24hours(tmptimevec);
 
                 // Wenn Label welches eine Einheit und Wert hat hier ein else if mit dem setter einfügen. Zusätzlich in map einfügen
                 for (const auto& [key, value] : this->wetterOptions)
@@ -315,9 +334,17 @@ public:
 
     void setTemp24hours(const QVector<QString> &temp24hours){
         m_temp24hours = temp24hours;
+        emit temp24hoursChanged();
     };
+
+    void setTime24hours(const QVector<QString> &time24hours){
+        m_time24hours = time24hours;
+        emit time24hoursChanged();
+    };
+
 signals:
     void temp24hoursChanged();
+    void time24hoursChanged();
 };
 
 #endif // CALLER_H
