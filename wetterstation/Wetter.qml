@@ -251,8 +251,8 @@ Page {
                         color: "transparent"
                         border.color: "black"
                         Column {
-                            Text { text: "Zeit: " + caller.time24hours[index] }
-                            Text { text: "Temperatur: " +caller.temp24hours[index] }
+                            Text { text: "       " + caller.time24hours[index] + "Uhr" }
+                            Text { text: "          " +caller.temp24hours[index]+ "°C" }
                         }
                     }
                 }
