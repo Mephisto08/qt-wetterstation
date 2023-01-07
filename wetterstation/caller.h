@@ -273,9 +273,9 @@ public:
     }
 
     enum Roles {
-            TimeRole = Qt::UserRole + 1,
-            TemperatureRole
-        };
+        TimeRole = Qt::UserRole + 1,
+        TemperatureRole
+    };
 
 
     QVector<QString> temp24hours() const
@@ -404,24 +404,45 @@ public:
                 {
                     QString __UnitStr = hourlyUnitObject[std::get<0>(value)].toString();
                     QString __ValueStr = QString::number(hourlyValuesObject[std::get<0>(value)][hourIndex].toDouble());
-                    QObject* __Item = this->mainPage->findChild<QObject *>(key);
-                    __Item->setProperty("text", std::get<1>(value) + __ValueStr + __UnitStr);
 
-                    if(key.toStdString() == "setTemperature"){
+                    if(key.toStdString() == "wetterTemperatur"){
                         this->setTemperature(std::get<1>(value) + __ValueStr + __UnitStr);
 
-                    }else if(key.toStdString() == "setRainMM"){
+                    }else if(key.toStdString() == "wetterRegenInMM"){
                         this->setRainMM(std::get<1>(value) + __ValueStr + __UnitStr);
                     }
-                    else if(key.toStdString() == "setCloudcover"){
+                    else if(key.toStdString() == "wetterWolkendichte"){
                         this->setCloudcover(std::get<1>(value) + __ValueStr + __UnitStr);
                     }
-                    else if(key.toStdString() == "setWindspeed"){
+                    else if(key.toStdString() == "wetterWindgeschindigkeit"){
                         this->setWindspeed(std::get<1>(value) + __ValueStr + __UnitStr);
                     }
-                    else if(key.toStdString() == "setWinddirection"){
-                        this->setWinddirection(std::get<1>(value) + __ValueStr + __UnitStr);
+                    else if(key.toStdString() == "wetterWindRichtung"){
+
+                        double windDirection = __ValueStr.toDouble(); // Beispielwert in Grad
+                        if (windDirection >= 337.5 || windDirection < 22.5) {
+                            __ValueStr = "Nord";
+                        } else if (windDirection >= 22.5 && windDirection < 67.5) {
+                            __ValueStr = "Nord-Ost";
+                        } else if (windDirection >= 67.5 && windDirection < 112.5) {
+                            __ValueStr = "Ost";
+                        } else if (windDirection >= 112.5 && windDirection < 157.5) {
+                            __ValueStr = "Süd-Ost";
+                        } else if (windDirection >= 157.5 && windDirection < 202.5) {
+                            __ValueStr = "Süd";
+                        } else if (windDirection >= 202.5 && windDirection < 247.5) {
+                            __ValueStr = "Süd-West";
+                        } else if (windDirection >= 247.5 && windDirection < 292.5) {
+                            __ValueStr = "West";
+                        } else if (windDirection >= 292.5 && windDirection < 337.5) {
+                            __ValueStr = "Nord-West";
+                        }
+                        __UnitStr = "";
+                        this->setWinddirection(std::get<1>(value) + __ValueStr);
                     }
+
+                    QObject* __Item = this->mainPage->findChild<QObject *>(key);
+                    __Item->setProperty("text", std::get<1>(value) + __ValueStr + __UnitStr);
                 }
 
                 int weathercodeInt = hourlyValuesObject["weathercode"][hourIndex].toInt();
