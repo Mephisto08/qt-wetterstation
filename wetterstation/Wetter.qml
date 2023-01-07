@@ -238,16 +238,21 @@ Page {
 
         GridLayout{
             columns: 24
-            columnSpacing: 10
+            columnSpacing: 0
             anchors.fill: parent
             Repeater {
                 model: 24
                 delegate: Item {
-                    width: 100
+                    width: 90
                     height: 50
-                    Column {
-                        Text { text: "Zeit: " + caller.time24hours[index] }
-                        Text { text: "Temperatur: " +caller.temp24hours[index] }
+                    Rectangle{
+                        width: 90
+                        height: 50
+                        border.color: "black"
+                        Column {
+                            Text { text: "Zeit: " + caller.time24hours[index] }
+                            Text { text: "Temperatur: " +caller.temp24hours[index] }
+                        }
                     }
                 }
             }
