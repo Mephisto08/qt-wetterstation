@@ -248,6 +248,7 @@ Page {
                     Rectangle{
                         width: 90
                         height: 50
+                        color: "transparent"
                         border.color: "black"
                         Column {
                             Text { text: "Zeit: " + caller.time24hours[index] }
