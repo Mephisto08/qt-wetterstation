@@ -1,9 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Controls.Material 2.4
 
 Page {
     id: optionen
+    Material.theme: Material.Light
     anchors {
         fill: parent
     }

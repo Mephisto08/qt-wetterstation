@@ -8,16 +8,17 @@ ApplicationWindow {
     id: mainWindow
     width: 640
     height: 480
-    minimumWidth: 640
-    minimumHeight: 480
-    maximumWidth: 640
-    maximumHeight: 480
+    minimumWidth: mainWindow.width
+    minimumHeight: mainWindow.height
+    maximumWidth: mainWindow.width
+    maximumHeight: mainWindow.height
     visible: true
+    visibility: "FullScreen"
     title: qsTr("Wetter-Station")
     Material.theme: Material.Light
-    Material.accent: Material.Purple
     property string white: "#FFFFFF"
     property string blue: "#0A83E0"
+    Material.accent: blue
 
     Drawer {
         id: drawer

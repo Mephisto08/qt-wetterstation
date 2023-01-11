@@ -2,11 +2,13 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
+import QtQuick.Controls.Material 2.4
 
 Page {
     id: wetter
     objectName: "wetterPage"
     anchors.fill: parent
+    Material.theme: Material.Light
     property var wetterModel: WetterModel {}
 
     background: Image {
