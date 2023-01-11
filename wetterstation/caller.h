@@ -393,8 +393,8 @@ public:
                 QVector<QString> tmptempvec;
                 QVector<QString> tmptimevec;
                 for(int i = 0; i < 24; ++i){
-                    QString temperature = QString::number(hourlyValuesObject["temperature_2m"][i].toDouble());
-                    QString time = hourlyValuesObject["time"][i].toString().mid(11,2)+":00";
+                    QString temperature = QString::number(hourlyValuesObject.value("temperature_2m")[i].toDouble());
+                    QString time = hourlyValuesObject.value("time")[i].toString().mid(11,2)+":00";
 
 
                     tmptempvec.push_back(temperature);
@@ -407,7 +407,7 @@ public:
                 for (const auto& [key, value] : this->wetterOptions)
                 {
                     QString __UnitStr = hourlyUnitObject[std::get<0>(value)].toString();
-                    QString __ValueStr = QString::number(hourlyValuesObject[std::get<0>(value)][hourIndex].toDouble());
+                    QString __ValueStr = QString::number(hourlyValuesObject.value(std::get<0>(value))[hourIndex].toDouble());
 
                     if(key.toStdString() == "wetterTemperatur"){
                         this->setTemperature(std::get<1>(value) + __ValueStr + __UnitStr);
@@ -449,7 +449,7 @@ public:
                     __Item->setProperty("text", std::get<1>(value) + __ValueStr + __UnitStr);
                 }
 
-                int weathercodeInt = hourlyValuesObject["weathercode"][hourIndex].toInt();
+                int weathercodeInt = hourlyValuesObject.value("weathercode")[hourIndex].toInt();
                 QString weathercodeQS = QString::fromStdString(this->wetterCodes[weathercodeInt]);
                 QObject* wetterCode__Item = this->mainPage->findChild<QObject *>("wetterCode");
                 wetterCode__Item->setProperty("text", weathercodeQS);
