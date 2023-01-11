@@ -114,7 +114,6 @@ Page {
                 leftPadding: 20
                 rightPadding: 20
                 onClicked: {
-                    //optionenTitle.visible = !optionenTitle.visible
                     model.checked = checked
                     caller.updateVisibility(model.name, model.checked)
 
@@ -139,5 +138,15 @@ Page {
             bottomPadding: 5
             onTextChanged: inputState = text
         }
+    }
+
+    Button {
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        text: "Exit App"
+        onClicked: caller.close()
     }
 }

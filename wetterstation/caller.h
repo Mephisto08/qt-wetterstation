@@ -144,6 +144,10 @@ public:
         this->getWeather();
     }
 
+    Q_INVOKABLE void close() {
+        exit(0);
+    }
+
     Q_INVOKABLE void updateVisibility(QString option, bool checked) {
         string optionString = option.toStdString();
         if(optionString == "Datum"){
